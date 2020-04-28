@@ -1,0 +1,43 @@
+body {
+    background-color: #363636;
+    color:#b388ff;
+}
+
+  /* label color */
+.input-field label {
+    color: #b388ff;
+}
+
+.input-field input[type=text] {
+    color:white;
+}
+
+  /* label focus color */
+.input-field input[type=text]:focus + label {
+    color: #b388ff;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+    border-bottom: 1px solid #b388ff;
+    box-shadow: 0 1px 0 0 #b388ff;
+}
+
+.input-field input[type=text]:focus {
+    border-bottom: 1px solid #b388ff;
+    box-shadow: 0 1px 0 0 #b388ff;
+}
+
+#toast-container {
+    top: auto !important;
+    right: auto !important;
+    bottom: 10%;
+    left:80%;
+}
+
+#generateBtn {
+    background-color: #9e66ff;
+}
+
+#generateBtn:hover {
+    background-color:#b388ff
+}
