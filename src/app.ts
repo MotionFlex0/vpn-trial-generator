@@ -6,7 +6,8 @@ import puppeteer from "puppeteer"
 import socketio from "socket.io"
 import { MessageType, MessageDataFields } from "./types/socket"
 import { email } from "./utils/email"
-import { constructInfoMessage } from "./utils/message"
+import { constructInfoMessage, constructFailureMessage, constructSuccessMessage } from "./utils/message"
+import { protonvpn } from './utils/protonvpn';
 
 const app: Application = express();
 const server = http.createServer(app);
@@ -38,11 +39,10 @@ app.get('/api/generate', async(req: Request, res: Response) => {
 });
 
 io.on("connection", async (socket) => {
-    //const incogBrowser = await browser.createIncognitoBrowserContext();
-    const emailPage = new email(await browser.newPage());
-    //const vpnPage = await browser.newPage()
+    const incogBrowser = await browser.createIncognitoBrowserContext();
+    const emailPage = new email(await incogBrowser.newPage());
+    const vpnPage = new protonvpn(await incogBrowser.newPage())
     
-
     socket.on("message", async (response: MessageDataFields) => {
         if (response.type === MessageType.GENERATE_CREDIENTIALS) {
             console.log("[socket] MessageType.GENERATE_CREDIENTIALS")
@@ -50,29 +50,61 @@ io.on("connection", async (socket) => {
             
             await emailPage.open()
             socket.emit("message", constructInfoMessage(`Created new email address: ${emailPage.email}`));
-            setInterval(async () => { 
-                const emailCount = await emailPage.getEmailCount();
-                console.log(`There is currently ${emailCount} email(s).`)
-                if (emailCount > 0) {
-                    const emailList = await emailPage.getEmailList();
-                    console.log("Here are the list of emails: ", emailList);
-                }
 
-            }, 5000)
-            //emailPage.close();
+            const success = await vpnPage.signup(emailPage.email);
+            if(success) {
+                socket.emit("message", constructInfoMessage(`Account creation process started. Verifying email.`));
+            
+                const verificationEmail = await (new Promise<ReturnType<typeof emailPage.getEmailContent>>((resolve) => {
+                    const interval = setInterval(async () => {
+                        const emailCount = await emailPage.getEmailCount();
+                        console.log(`There is currently ${emailCount} email(s).`)
+                        if (emailCount > 0) {
+                            const emailList = await emailPage.getEmailList();
+                            if(emailList) {
+                                const protonEmail = emailList.reduce((prevEmail, email) => {
+                                   return (email.subject == "Proton Verification Code" ? email : prevEmail);
+                                });
+
+                                if (protonEmail !== undefined) {
+                                    clearInterval(interval);
+                                    resolve(emailPage.getEmailContent(protonEmail.mailId));
+                                }
+                            }
+                        }
+                    }, 5000);
+                }));
+
+                socket.emit("message", constructInfoMessage(`Received verification code.`));
+                const verfifcationCode = verificationEmail.content.match(/<code.*>(\d+)<\/code>/i)![1];
+                const accountCreated = await vpnPage.verfiyEmailAddress(verfifcationCode);
+                if (accountCreated) {
+                    socket.emit("message", constructInfoMessage("Account created successfully. Login details are now available."));
+                    socket.emit("message", constructSuccessMessage(vpnPage.username, vpnPage.password));
+                    socket.disconnect(true);
+                }
+            }
+            else {
+                socket.emit("message", constructFailureMessage("Failed to create account. Shutting down. Try again later."));
+                if (vpnPage.smsOnly)
+                    socket.emit("message", constructFailureMessage("SMS verification ONLY. Try again later."));
+                socket.disconnect(true);
+            }
         }
         console.log(`[socket] new message | type: MessageType.${MessageType[response.type]}`)
     });
 
     socket.on('disconnecting', (reason) => {
         emailPage.close();
+        vpnPage.close();
+        incogBrowser.close();
     });
 
     console.log("new connection.");
 });
 
 server.listen(5000, async () => {
-    browser = await puppeteer.launch({headless:false});
+    browser = await puppeteer.launch();//TEST MODE: puppeteer.launch({headless:false});
     console.log("server and browser are running");
 });
 

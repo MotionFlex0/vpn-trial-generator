@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "node dist/app.js --unhandled-rejections=strict",
     "dev": "concurrently -k -p \"[{name}]\" -n \"tsc-server,tsc-static,nodemon\" -c \"cyan.bold,green.bold,purple.bold\" \"npm:watch-ts\" \"npm:watch-static\" \"npm:watch-node\"",
     "build": "tsc -p tsconfig.json && npm run build-bundle-js && npm run copy-static-assets",
     "build-bundle-js": "tsc -p tsconfig.browserify.json && mkdirp ./dist/public/js/ && browserify ./dist/temp/public/js/index.js | npx babel --no-babelrc --presets=@babel/preset-env | uglifyjs --compress --mangle -o ./dist/public/js/bundle.js && rimraf ./dist/temp",
@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch-ts": "tsc -w",
     "watch-static": "ts-node staticWatcher.ts",
-    "watch-node": "nodemon dist/app.js -i dist/public/ -i dist/temp/"
+    "watch-node": "nodemon dist/app.js -i dist/public/ -i dist/temp/ --unhandled-rejections=strict"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "@types/socket.io": "^2.1.4",
     "@types/socket.io-client": "^1.4.32",
     "@types/uuid": "^7.0.3",
+    "crypto-random-string": "^3.2.0",
     "express": "^4.17.1",
     "express-handlebars": "^4.0.3",
     "puppeteer": "^3.0.1",

@@ -6,15 +6,18 @@
       </div>
       
       <div class="row">
-        <div class="input-field col s4 offset-s2">
-          <input readonly placeholder="[Username]" id="username" type="text" autocomplete="off" onclick="select(this)">
+        <div class="copyable-field input-field col s4 offset-s2">
+          <a href="#" class="tooltipped" data-tooltip="Tap to copy"><i class="small material-icons">content_copy</i></a>
+          <input readonly placeholder="[Username]" id="username" type="text" onclick="select(this)">
           <label for="username">Username</label>
         </div>
-        <div class="input-field col s4">
-          <input readonly placeholder="[Password]" id="password" type="text" autocomplete="off" onclick="select(this)">
+        <div class="copyable-field input-field col s4">
+          <a href="#" class="tooltipped" data-tooltip="Tap to copy"><i class="small material-icons">content_copy</i></a>
+          <input readonly placeholder="[Password]" id="password" type="text" onclick="select(this)">
           <label for="password">Password</label>
         </div>
       </div>
+      <div class="row"></div>
       <div class="row">
         <a class="waves-effect btn waves-light" id="generateBtn">Generate credentials</a>
         <div class="progress col s6 offset-s3 black hide" id="progressBar">
