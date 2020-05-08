@@ -27,12 +27,30 @@ body {
     box-shadow: 0 1px 0 0 #b388ff;
 }
 
-#toast-container {
-    top: auto !important;
-    right: auto !important;
-    bottom: 10%;
-    left:75%;
+@media (min-width: 600px) {
+    #toast-container {
+        top: auto !important;
+        right: auto !important;
+        bottom: 10%;
+        left:75%;
+        user-select: none; /* Standard */
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
 }
+
+@media (max-width: 600px) {
+    #toast-container  {
+        min-width: 70%;
+        top: 30%;
+        right: 50%;
+        transform: translateX(50%) translateY(40%);
+        user-select: none; /* Standard */
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+}
+
 
 #generateBtn {
     background-color: #9e66ff;

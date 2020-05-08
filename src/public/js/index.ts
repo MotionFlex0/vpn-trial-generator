@@ -9,7 +9,7 @@ let done = false;
 
 window.onload = () => {
     let tooltipElements = document.querySelectorAll('.tooltipped');
-    M.Tooltip.init(tooltipElements, {exitDelay:1000});
+    M.Tooltip.init(tooltipElements, {exitDelay:800});
     M.AutoInit();
 
     tooltipElements.forEach((element) => {
@@ -21,19 +21,17 @@ window.onload = () => {
             inputElement!.focus();
             inputElement!.select();
             document.execCommand("copy");
-            this.dataset.tooltip = "Copied!";
-        
+
+            const element = this;
             const tooltipInstance = M.Tooltip.getInstance(this);
-            tooltipInstance.close();
-            tooltipInstance.options.exitDelay = 4000;
-            tooltipInstance.open();
-            tooltipInstance.options.outDuration = Number.MAX_SAFE_INTEGER;
+
+            tooltipInstance.options.exitDelay = 2000;
+            changeTooltipText(element, "Copied!", true);
+            (<any>window).test = tooltipInstance;
             setTimeout(() => {
-                this.dataset.tooltip = "Tap to copy"
-                tooltipInstance.options.exitDelay = 1000;
-                tooltipInstance.options.outDuration = 250;
-                tooltipInstance.close();
-            }, 4000); 
+                tooltipInstance.options.exitDelay = 800;
+                changeTooltipText(element, "Tap to copy", false)
+            }, 2300); 
         });
     });
 
@@ -94,3 +92,17 @@ window.onload = () => {
         });
     }
 };
+
+function changeTooltipText(tooltippedElement: HTMLElement, text: string, showChangesLive: boolean) {
+    const tooltipInstance = M.Tooltip.getInstance(tooltippedElement);
+    const oldEnterDelay = tooltipInstance.options.enterDelay;
+    const oldExitDelay = tooltipInstance.options.exitDelay;
+
+    tooltippedElement.dataset.tooltip = text;
+    tooltipInstance.options.exitDelay = 0;
+    tooltipInstance.options.enterDelay = 0;
+    tooltipInstance.close();
+    tooltipInstance.options.exitDelay = oldExitDelay;
+    showChangesLive && tooltipInstance.open();
+    tooltipInstance.options.enterDelay = oldEnterDelay;
+}

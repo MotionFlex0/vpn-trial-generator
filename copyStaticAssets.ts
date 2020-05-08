@@ -21,4 +21,5 @@ const shell_cp = (options: string, source: string, dest: string) => {
 
 shell_cp("-R", "src/public/css/.", "dist/public/css/");
 shell_cp("-R", "src/public/img/.", "dist/public/img/");
+shell_cp("-R", "src/public/js/libs/.", "dist/public/js/libs/");
 console.log("***cp error here is not a problem***")
