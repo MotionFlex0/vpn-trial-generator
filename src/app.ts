@@ -55,7 +55,7 @@ io.on("connection", async (socket) => {
                                 const emailList = await emailPage.getEmailList();
                                 if(emailList) {
                                     const protonEmail = emailList.reduce((prevEmail, email) => {
-                                    return (email.subject == "Proton Verification Code" ? email : prevEmail);
+                                        return (email.subject == "Proton Verification Code" ? email : prevEmail);
                                     });
 
                                     if (protonEmail !== undefined) {
@@ -103,7 +103,7 @@ io.on("connection", async (socket) => {
 });
 
 server.listen(5000, async () => {
-    browser = await puppeteer.launch();//TEST MODE: puppeteer.launch({headless:false});
+    browser = await puppeteer.launch({headless:false});//TEST MODE: puppeteer.launch({headless:false});
     console.log("server and browser are running");
 });
 
