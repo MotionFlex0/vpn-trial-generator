@@ -9,6 +9,8 @@ import { email } from "./utils/email"
 import { constructInfoMessage, constructFailureMessage, constructSuccessMessage } from "./utils/message"
 import { protonvpn } from './utils/protonvpn';
 
+require("dotenv").config();
+
 const app: Application = express();
 const server = http.createServer(app);
 const io = socketio(server);

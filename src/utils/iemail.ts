@@ -1,8 +1,8 @@
 import puppeteer from 'puppeteer'
 
 abstract class IEmail {
-    private _email = "";  
-    private _page: puppeteer.Page;
+    protected _email = "";  
+    protected _page: puppeteer.Page;
 
     //page MUST be unique to this instance
     constructor (page : puppeteer.Page){
@@ -13,7 +13,7 @@ abstract class IEmail {
         return this._email;
     }
 
-    abstract async open():Promise<string>;
+    abstract async open():Promise<void>;
 
     abstract async close():Promise<void>;
 
@@ -23,9 +23,6 @@ abstract class IEmail {
 
     //returns {mailId, sender, subject, url}
     abstract async getEmailList():Promise<any>;
-
-    //Needs to be the exact URL, including / if root.
-    protected abstract async gotoIfNot(url: string):Promise<void>
 }
 
 export {IEmail};
