@@ -1,4 +1,5 @@
-# ProtonVPN trial bot
+# VPM account generator
+Generates account for a VPN provider, by creating a valid email address, generating credentials and performing email validation.
 ## Install
 1. Install required dependencies globally
     ```
