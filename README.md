@@ -1,4 +1,5 @@
-# ProtonVPN trial bot
+# VPN account generator
+Generates account for a VPN provider, by creating a valid email address, generating credentials and performing email validation. All of this is done in a real browser, using Puppeteer.
 ## Install
 1. Install required dependencies globally
     ```
