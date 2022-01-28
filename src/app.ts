@@ -105,7 +105,7 @@ io.on("connection", async (socket) => {
 });
 
 server.listen(5000, async () => {
-    browser = await puppeteer.launch({headless:false});//TEST MODE: puppeteer.launch({headless:false});
+    browser = await puppeteer.launch({headless:true});//TEST MODE: puppeteer.launch({headless:false});
     console.log("server and browser are running");
 });
 
