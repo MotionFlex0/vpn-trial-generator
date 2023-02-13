@@ -46,7 +46,7 @@
     "concurrently": "^7.0.0",
     "del": "^5.1.0",
     "mkdirp": "^1.0.4",
-    "nodemon": "^2.0.3",
+    "nodemon": "^2.0.20",
     "rimraf": "^3.0.2",
     "shelljs": "^0.8.3",
     "ts-node": "^8.9.0",
